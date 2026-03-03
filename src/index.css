@@ -102,6 +102,13 @@
   body {
     @apply bg-background text-foreground;
     font-family: 'Syne', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  ::selection {
+    background: hsl(var(--primary) / 0.25);
+    color: hsl(var(--foreground));
   }
 }
 
@@ -151,8 +158,14 @@
   }
 
   .dot-pattern {
-    background-image: radial-gradient(circle, hsl(var(--border)) 1px, transparent 1px);
+    background-image: radial-gradient(circle, hsl(var(--border) / 0.6) 1px, transparent 1px);
     background-size: 32px 32px;
+  }
+
+  @media (max-width: 640px) {
+    .dot-pattern {
+      background-size: 24px 24px;
+    }
   }
 
   .line-accent {
@@ -160,5 +173,39 @@
     height: 3px;
     background: linear-gradient(90deg, hsl(var(--primary)), hsl(var(--accent)));
     border-radius: 2px;
+  }
+
+  @media (max-width: 640px) {
+    .line-accent {
+      width: 32px;
+      height: 2px;
+    }
+  }
+
+  /* Animated gradient border */
+  @keyframes gradient-shift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+
+  .animated-border {
+    background: linear-gradient(90deg, hsl(var(--primary)), hsl(var(--accent)), hsl(var(--highlight)), hsl(var(--primary)));
+    background-size: 300% 100%;
+    animation: gradient-shift 4s ease infinite;
+  }
+
+  /* Smooth scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: hsl(var(--background));
+  }
+  ::-webkit-scrollbar-thumb {
+    background: hsl(var(--muted-foreground) / 0.3);
+    border-radius: 3px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--muted-foreground) / 0.5);
   }
 }
