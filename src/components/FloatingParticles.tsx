@@ -1,15 +1,22 @@
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
+import { useMemo } from "react";
 
 const FloatingParticles = () => {
-  const particles = Array.from({ length: 20 }, (_, i) => ({
-    id: i,
-    x: Math.random() * 100,
-    y: Math.random() * 100,
-    size: Math.random() * 4 + 2,
-    duration: Math.random() * 10 + 8,
-    delay: Math.random() * 5,
-    type: i % 3,
-  }));
+  const prefersReduced = useReducedMotion();
+
+  const particles = useMemo(
+    () =>
+      Array.from({ length: prefersReduced ? 6 : 18 }, (_, i) => ({
+        id: i,
+        x: Math.random() * 100,
+        y: Math.random() * 100,
+        size: Math.random() * 4 + 2,
+        duration: Math.random() * 12 + 8,
+        delay: Math.random() * 6,
+        type: i % 3,
+      })),
+    [prefersReduced]
+  );
 
   return (
     <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
@@ -24,16 +31,20 @@ const FloatingParticles = () => {
             height: p.size,
             background:
               p.type === 0
-                ? "hsl(var(--primary) / 0.2)"
+                ? "hsl(var(--primary) / 0.15)"
                 : p.type === 1
-                ? "hsl(var(--accent) / 0.15)"
-                : "hsl(var(--highlight) / 0.15)",
+                ? "hsl(var(--accent) / 0.12)"
+                : "hsl(var(--highlight) / 0.1)",
           }}
-          animate={{
-            y: [0, -50, 0],
-            x: [0, p.type === 0 ? 15 : -15, 0],
-            opacity: [0, 0.6, 0],
-          }}
+          animate={
+            prefersReduced
+              ? { opacity: [0.2, 0.5, 0.2] }
+              : {
+                  y: [0, -50, 0],
+                  x: [0, p.type === 0 ? 15 : -15, 0],
+                  opacity: [0, 0.5, 0],
+                }
+          }
           transition={{
             duration: p.duration,
             repeat: Infinity,
