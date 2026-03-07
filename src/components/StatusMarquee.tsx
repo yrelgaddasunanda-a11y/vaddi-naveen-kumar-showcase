@@ -1,4 +1,5 @@
-import { motion, forwardRef } from "framer-motion";
+import { motion } from "framer-motion";
+import { forwardRef } from "react";
 
 const items = [
   "UNDER DEVELOPMENT",

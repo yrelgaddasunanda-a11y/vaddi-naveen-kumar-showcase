@@ -1,4 +1,5 @@
-import { motion, forwardRef } from "framer-motion";
+import { motion } from "framer-motion";
+import { useState, useEffect, useCallback, forwardRef } from "react";
 import { useState, useEffect, useCallback } from "react";
 
 type AnimationStyle = "rotate" | "wave" | "scatter" | "flip" | "glitch";
