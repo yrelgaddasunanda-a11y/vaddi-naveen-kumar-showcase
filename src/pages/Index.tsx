@@ -1,5 +1,6 @@
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Mail, ArrowUpRight, Sparkles, MapPin, Clock } from "lucide-react";
+import { useState, useCallback } from "react";
 import InteractiveLetters from "@/components/InteractiveLetters";
 import FloatingParticles from "@/components/FloatingParticles";
 import SocialLinks from "@/components/SocialLinks";
@@ -8,12 +9,24 @@ import ProgressBar from "@/components/ProgressBar";
 import StatusMarquee from "@/components/StatusMarquee";
 import CursorGlow from "@/components/CursorGlow";
 import MagneticButton from "@/components/MagneticButton";
+import IntroAnimation from "@/components/IntroAnimation";
 
 const Index = () => {
   const currentYear = new Date().getFullYear();
+  const [introComplete, setIntroComplete] = useState(false);
+  const handleIntroComplete = useCallback(() => setIntroComplete(true), []);
 
   return (
-    <div className="relative min-h-[100dvh] bg-background noise-bg dot-pattern overflow-hidden flex flex-col">
+    <>
+      <IntroAnimation onComplete={handleIntroComplete} />
+      <AnimatePresence>
+        {introComplete && (
+          <motion.div
+            className="relative min-h-[100dvh] bg-background noise-bg dot-pattern overflow-hidden flex flex-col"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+          >
       <FloatingParticles />
       <CursorGlow />
 
