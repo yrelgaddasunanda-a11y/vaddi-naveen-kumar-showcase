@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { motion, forwardRef } from "framer-motion";
 
 const items = [
   "UNDER DEVELOPMENT",
@@ -11,11 +11,11 @@ const items = [
   "✦",
 ];
 
-const StatusMarquee = () => {
+const StatusMarquee = forwardRef<HTMLDivElement>((_, ref) => {
   const repeatedItems = [...items, ...items, ...items, ...items];
 
   return (
-    <div className="relative z-10 overflow-hidden border-y border-border/50 py-2 sm:py-3">
+    <div ref={ref} className="relative z-10 overflow-hidden border-y border-border/50 py-2 sm:py-3">
       {/* Gradient fade edges */}
       <div className="absolute left-0 top-0 bottom-0 w-16 sm:w-24 bg-gradient-to-r from-background to-transparent z-10 pointer-events-none" />
       <div className="absolute right-0 top-0 bottom-0 w-16 sm:w-24 bg-gradient-to-l from-background to-transparent z-10 pointer-events-none" />
@@ -39,6 +39,8 @@ const StatusMarquee = () => {
       </motion.div>
     </div>
   );
-};
+});
+
+StatusMarquee.displayName = "StatusMarquee";
 
 export default StatusMarquee;

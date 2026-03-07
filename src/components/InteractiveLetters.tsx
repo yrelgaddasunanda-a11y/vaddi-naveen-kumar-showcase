@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { motion, forwardRef } from "framer-motion";
 import { useState, useEffect, useCallback } from "react";
 
 type AnimationStyle = "rotate" | "wave" | "scatter" | "flip" | "glitch";
@@ -39,7 +39,7 @@ const getHoverAnimation = (style: AnimationStyle, index: number) => {
   }
 };
 
-const InteractiveLetters = () => {
+const InteractiveLetters = forwardRef<HTMLDivElement>((_, ref) => {
   const name = "VADDI NAVEEN KUMAR";
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [animStyle, setAnimStyle] = useState<AnimationStyle>("rotate");
@@ -64,7 +64,7 @@ const InteractiveLetters = () => {
   const letters = name.split("");
 
   return (
-    <div className="flex flex-wrap justify-center gap-[2px] xs:gap-1 sm:gap-2 select-none max-w-4xl mx-auto px-2">
+    <div ref={ref} className="flex flex-wrap justify-center gap-[2px] xs:gap-1 sm:gap-2 select-none max-w-4xl mx-auto px-2">
       {letters.map((letter, index) => {
         if (letter === " ") {
           return <span key={index} className="w-2 xs:w-3 sm:w-5" />;
@@ -135,6 +135,8 @@ const InteractiveLetters = () => {
       </motion.div>
     </div>
   );
-};
+});
+
+InteractiveLetters.displayName = "InteractiveLetters";
 
 export default InteractiveLetters;
