@@ -1,5 +1,6 @@
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Mail, ArrowUpRight, Sparkles, MapPin, Clock } from "lucide-react";
+import { useState, useCallback } from "react";
 import InteractiveLetters from "@/components/InteractiveLetters";
 import FloatingParticles from "@/components/FloatingParticles";
 import SocialLinks from "@/components/SocialLinks";
@@ -8,12 +9,24 @@ import ProgressBar from "@/components/ProgressBar";
 import StatusMarquee from "@/components/StatusMarquee";
 import CursorGlow from "@/components/CursorGlow";
 import MagneticButton from "@/components/MagneticButton";
+import IntroAnimation from "@/components/IntroAnimation";
 
 const Index = () => {
   const currentYear = new Date().getFullYear();
+  const [introComplete, setIntroComplete] = useState(false);
+  const handleIntroComplete = useCallback(() => setIntroComplete(true), []);
 
   return (
-    <div className="relative min-h-[100dvh] bg-background noise-bg dot-pattern overflow-hidden flex flex-col">
+    <>
+      <IntroAnimation onComplete={handleIntroComplete} />
+      <AnimatePresence>
+        {introComplete && (
+          <motion.div
+            className="relative min-h-[100dvh] bg-background noise-bg dot-pattern overflow-hidden flex flex-col"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+          >
       <FloatingParticles />
       <CursorGlow />
 
@@ -196,7 +209,10 @@ const Index = () => {
       <div className="fixed top-0 left-0 w-48 sm:w-72 h-48 sm:h-72 bg-[radial-gradient(circle,hsl(var(--primary)/0.08),transparent_70%)] pointer-events-none" />
       <div className="fixed bottom-0 right-0 w-64 sm:w-96 h-64 sm:h-96 bg-[radial-gradient(circle,hsl(var(--accent)/0.06),transparent_70%)] pointer-events-none" />
       <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] sm:w-[500px] md:w-[600px] h-[300px] sm:h-[500px] md:h-[600px] bg-[radial-gradient(circle,hsl(var(--primary)/0.03),transparent_60%)] pointer-events-none" />
-    </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   );
 };
 
