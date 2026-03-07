@@ -3,7 +3,7 @@ import { Github, Linkedin, Instagram, Twitter } from "lucide-react";
 
 const links = [
   { icon: Github, label: "GitHub", href: "https://github.com/", color: "hover:text-foreground" },
-  { icon: Linkedin, label: "LinkedIn", href: "https://linkedin.com/in/", color: "hover:text-[hsl(210,80%,55%)]" },
+  { icon: Linkedin, label: "LinkedIn", href: "https://linkedin.com/in/", color: "hover:text-primary" },
   { icon: Instagram, label: "Instagram", href: "https://instagram.com/", color: "hover:text-accent" },
   { icon: Twitter, label: "X", href: "https://x.com/", color: "hover:text-foreground" },
 ];
