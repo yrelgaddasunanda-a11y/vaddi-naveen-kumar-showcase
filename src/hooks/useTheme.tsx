@@ -14,9 +14,9 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
     if (typeof window !== "undefined") {
       const stored = localStorage.getItem("vnk-theme") as Theme;
       if (stored) return stored;
-      return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+      return "light";
     }
-    return "dark";
+    return "light";
   });
 
   useEffect(() => {
