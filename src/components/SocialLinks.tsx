@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { Github, Linkedin, Instagram, Twitter } from "lucide-react";
+import { forwardRef } from "react";
 
 const links = [
   { icon: Github, label: "GitHub", href: "https://github.com/VaddiNaveenKumar", color: "hover:text-foreground" },
@@ -8,7 +9,7 @@ const links = [
   { icon: Twitter, label: "X", href: "https://x.com/NaveenKuamr07", color: "hover:text-foreground" },
 ];
 
-const SocialLinks = () => {
+const SocialLinks = forwardRef<HTMLDivElement>((_, ref) => {
   return (
     <div className="flex items-center gap-2 sm:gap-3">
       {links.map((link, i) => (
