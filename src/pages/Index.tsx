@@ -6,6 +6,8 @@ import SocialLinks from "@/components/SocialLinks";
 import ThemeToggle from "@/components/ThemeToggle";
 import ProgressBar from "@/components/ProgressBar";
 import StatusMarquee from "@/components/StatusMarquee";
+import CursorGlow from "@/components/CursorGlow";
+import MagneticButton from "@/components/MagneticButton";
 
 const Index = () => {
   const currentYear = new Date().getFullYear();
@@ -13,6 +15,7 @@ const Index = () => {
   return (
     <div className="relative min-h-[100dvh] bg-background noise-bg dot-pattern overflow-hidden flex flex-col">
       <FloatingParticles />
+      <CursorGlow />
 
       {/* Top animated progress bar */}
       <ProgressBar />
@@ -49,7 +52,7 @@ const Index = () => {
         <div className="text-center max-w-4xl w-full">
           {/* Status Badge */}
           <motion.div
-            className="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-5 py-2 sm:py-2.5 rounded-full border border-border border-glow mb-6 sm:mb-10"
+            className="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-5 py-2 sm:py-2.5 rounded-full border border-border/50 backdrop-blur-md bg-card/40 shadow-[0_4px_30px_hsl(var(--primary)/0.08)] mb-6 sm:mb-10"
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.3, duration: 0.6 }}
@@ -137,9 +140,9 @@ const Index = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.3, duration: 0.6 }}
           >
-            <a
+            <MagneticButton
               href="mailto:vaddinaveen@example.com"
-              className="group inline-flex items-center gap-2 sm:gap-3 px-5 sm:px-7 py-3 sm:py-3.5 rounded-full bg-primary text-primary-foreground font-display text-xs sm:text-sm font-bold hover:shadow-[0_0_40px_hsl(var(--primary)/0.35)] transition-all duration-300 hover:scale-105 active:scale-95"
+              className="group inline-flex items-center gap-2 sm:gap-3 px-5 sm:px-7 py-3 sm:py-3.5 rounded-full bg-primary text-primary-foreground font-display text-xs sm:text-sm font-bold hover:shadow-[0_0_40px_hsl(var(--primary)/0.35)] transition-all duration-300"
             >
               <Mail size={14} className="sm:w-4 sm:h-4" />
               Get in Touch
@@ -147,7 +150,7 @@ const Index = () => {
                 size={12}
                 className="sm:w-[14px] sm:h-[14px] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform"
               />
-            </a>
+            </MagneticButton>
 
             <SocialLinks />
 
