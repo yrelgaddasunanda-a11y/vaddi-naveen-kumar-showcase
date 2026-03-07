@@ -209,7 +209,10 @@ const Index = () => {
       <div className="fixed top-0 left-0 w-48 sm:w-72 h-48 sm:h-72 bg-[radial-gradient(circle,hsl(var(--primary)/0.08),transparent_70%)] pointer-events-none" />
       <div className="fixed bottom-0 right-0 w-64 sm:w-96 h-64 sm:h-96 bg-[radial-gradient(circle,hsl(var(--accent)/0.06),transparent_70%)] pointer-events-none" />
       <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] sm:w-[500px] md:w-[600px] h-[300px] sm:h-[500px] md:h-[600px] bg-[radial-gradient(circle,hsl(var(--primary)/0.03),transparent_60%)] pointer-events-none" />
-    </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   );
 };
 
