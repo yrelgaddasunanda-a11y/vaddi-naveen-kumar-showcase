@@ -11,7 +11,7 @@ const links = [
 
 const SocialLinks = forwardRef<HTMLDivElement>((_, ref) => {
   return (
-    <div className="flex items-center gap-2 sm:gap-3">
+    <div ref={ref} className="flex items-center gap-2 sm:gap-3">
       {links.map((link, i) => (
         <motion.a
           key={link.label}
