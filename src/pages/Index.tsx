@@ -1,6 +1,6 @@
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
 import { Mail, ArrowUpRight, Sparkles, MapPin, Clock, ChevronDown } from "lucide-react";
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import InteractiveLetters from "@/components/InteractiveLetters";
 import FloatingParticles from "@/components/FloatingParticles";
 import SocialLinks from "@/components/SocialLinks";
@@ -49,6 +49,12 @@ const TypingText = ({ text, delay = 0 }: { text: string; delay?: number }) => {
 
 const Index = () => {
   const currentYear = new Date().getFullYear();
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll();
+  const parallaxSlow = useTransform(scrollYProgress, [0, 1], [0, -80]);
+  const parallaxMid = useTransform(scrollYProgress, [0, 1], [0, -150]);
+  const parallaxFast = useTransform(scrollYProgress, [0, 1], [0, 120]);
+  const parallaxScale = useTransform(scrollYProgress, [0, 0.5, 1], [1, 1.15, 0.9]);
 
   // Skip intro for returning visitors
   const [introComplete, setIntroComplete] = useState(() => {
@@ -199,7 +205,7 @@ const Index = () => {
                   transition={{ delay: 1.3, duration: 0.6 }}
                 >
                   <MagneticButton
-                    href="mailto:vaddinaveen@example.com"
+                    href="mailto:hello@vaddinaveenkumar.dev"
                     className="group inline-flex items-center gap-2 sm:gap-3 px-5 sm:px-7 py-3 sm:py-3.5 rounded-full bg-primary text-primary-foreground font-display text-xs sm:text-sm font-bold hover:shadow-[0_0_40px_hsl(var(--primary)/0.35)] transition-all duration-300"
                   >
                     <Mail size={14} className="sm:w-4 sm:h-4" />
@@ -215,7 +221,7 @@ const Index = () => {
                   <div className="flex items-center gap-2 text-muted-foreground/50">
                     <Clock size={10} />
                     <span className="font-mono-code text-[10px] sm:text-xs">
-                      vaddinaveen@example.com
+                      hello@vaddinaveenkumar.dev
                     </span>
                   </div>
                 </motion.div>
@@ -269,9 +275,9 @@ const Index = () => {
             </motion.footer>
 
             {/* Corner Decorations - responsive */}
-            <div className="fixed top-0 left-0 w-48 sm:w-72 h-48 sm:h-72 bg-[radial-gradient(circle,hsl(var(--primary)/0.08),transparent_70%)] pointer-events-none" />
-            <div className="fixed bottom-0 right-0 w-64 sm:w-96 h-64 sm:h-96 bg-[radial-gradient(circle,hsl(var(--accent)/0.06),transparent_70%)] pointer-events-none" />
-            <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] sm:w-[500px] md:w-[600px] h-[300px] sm:h-[500px] md:h-[600px] bg-[radial-gradient(circle,hsl(var(--primary)/0.03),transparent_60%)] pointer-events-none" />
+            <motion.div className="fixed top-0 left-0 w-48 sm:w-72 h-48 sm:h-72 bg-[radial-gradient(circle,hsl(var(--primary)/0.08),transparent_70%)] pointer-events-none" style={{ y: parallaxSlow }} />
+            <motion.div className="fixed bottom-0 right-0 w-64 sm:w-96 h-64 sm:h-96 bg-[radial-gradient(circle,hsl(var(--accent)/0.06),transparent_70%)] pointer-events-none" style={{ y: parallaxFast }} />
+            <motion.div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] sm:w-[500px] md:w-[600px] h-[300px] sm:h-[500px] md:h-[600px] bg-[radial-gradient(circle,hsl(var(--primary)/0.03),transparent_60%)] pointer-events-none" style={{ y: parallaxMid, scale: parallaxScale }} />
           </motion.div>
         )}
       </AnimatePresence>
