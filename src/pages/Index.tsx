@@ -424,77 +424,8 @@ const Index = () => {
             {/* ═══════════════════ MARQUEE DIVIDER ═══════════════════ */}
             <StatusMarquee />
 
-            {/* ═══════════════════ ABOUT / VISION SECTION ═══════════════════ */}
-            <section className="relative z-10 py-20 sm:py-32 px-4 sm:px-8 md:px-12">
-              <div className="max-w-4xl mx-auto">
-                <ScrollReveal>
-                  <div className="flex items-center gap-3 mb-8 sm:mb-12">
-                    <div className="line-accent" />
-                    <span className="font-mono-code text-[10px] sm:text-xs tracking-[0.3em] uppercase text-muted-foreground">
-                      About the Project
-                    </span>
-                  </div>
-                </ScrollReveal>
 
-                <TextReveal
-                  text="Building digital experiences at the intersection of design, motion, and technology."
-                  className="font-display text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-foreground leading-[1.1] mb-8 sm:mb-12"
-                  delay={0.1}
-                />
 
-                <ScrollReveal delay={0.3}>
-                  <p className="font-mono-code text-xs sm:text-sm text-muted-foreground max-w-2xl leading-relaxed">
-                    This portfolio is being crafted with obsessive attention to detail — every animation, 
-                    every interaction, every pixel is intentional. Built with React, Framer Motion, 
-                    and a passion for pushing web boundaries.
-                  </p>
-                </ScrollReveal>
-
-                {/* Stats row */}
-                <div className="grid grid-cols-3 gap-4 sm:gap-8 mt-12 sm:mt-16">
-                  {[
-                    { value: 100, suffix: "%", label: "Passion" },
-                    { value: 60, suffix: "fps", label: "Smooth" },
-                    { value: 0, suffix: "→∞", label: "Projects" },
-                  ].map((stat, i) => (
-                    <ScrollReveal key={stat.label} delay={0.1 + i * 0.1}>
-                      <div className="text-center">
-                        <div className="font-display text-3xl sm:text-5xl font-extrabold gradient-text mb-1">
-                          {stat.suffix === "→∞" ? (
-                            <span>0<span className="text-primary">→∞</span></span>
-                          ) : (
-                            <AnimatedNumber value={stat.value} suffix={stat.suffix} />
-                          )}
-                        </div>
-                        <span className="font-mono-code text-[9px] sm:text-[10px] tracking-[0.2em] uppercase text-muted-foreground/50">
-                          {stat.label}
-                        </span>
-                      </div>
-                    </ScrollReveal>
-                  ))}
-                </div>
-              </div>
-            </section>
-
-            {/* ═══════════════════ SKILLS / PILLARS ═══════════════════ */}
-            <section className="relative z-10 py-16 sm:py-24 px-4 sm:px-8 md:px-12">
-              <div className="max-w-5xl mx-auto">
-                <ScrollReveal>
-                  <div className="flex items-center gap-3 mb-8 sm:mb-12">
-                    <div className="line-accent" />
-                    <span className="font-mono-code text-[10px] sm:text-xs tracking-[0.3em] uppercase text-muted-foreground">
-                      What I Do
-                    </span>
-                  </div>
-                </ScrollReveal>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-                  {skills.map((skill, i) => (
-                    <SkillPillar key={skill.title} {...skill} index={i} />
-                  ))}
-                </div>
-              </div>
-            </section>
 
             {/* ═══════════════════ HORIZONTAL RULE ANIMATION ═══════════════════ */}
             <ScrollReveal className="px-4 sm:px-8 md:px-12">
