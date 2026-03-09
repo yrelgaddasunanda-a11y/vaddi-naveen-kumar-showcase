@@ -1,4 +1,4 @@
-import { motion, AnimatePresence, useScroll, useTransform, useInView } from "framer-motion";
+import { motion, AnimatePresence, useScroll, useTransform, useInView, useMotionValue, useSpring } from "framer-motion";
 import { Mail, ArrowUpRight, Sparkles, MapPin, Clock, ChevronDown, Code2, Palette, Rocket, Zap } from "lucide-react";
 import { useState, useCallback, useEffect, useRef } from "react";
 import InteractiveLetters from "@/components/InteractiveLetters";
@@ -14,6 +14,7 @@ import ScrollReveal from "@/components/ScrollReveal";
 import TextReveal from "@/components/TextReveal";
 import MorphingBlob from "@/components/MorphingBlob";
 import ScrollProgress from "@/components/ScrollProgress";
+import ContactSection from "@/components/ContactSection";
 
 /* ─── Typing text effect ─── */
 const TypingText = ({ text, delay = 0 }: { text: string; delay?: number }) => {
@@ -52,7 +53,7 @@ const TypingText = ({ text, delay = 0 }: { text: string; delay?: number }) => {
   );
 };
 
-/* ─── Skill pillar with hover glow ─── */
+/* ─── 3D Tilt Skill Card ─── */
 const SkillPillar = ({ icon: Icon, title, description, index }: {
   icon: React.ElementType;
   title: string;
@@ -61,33 +62,71 @@ const SkillPillar = ({ icon: Icon, title, description, index }: {
 }) => {
   const colors = ["primary", "accent", "highlight", "primary"];
   const color = colors[index % colors.length];
+  const ref = useRef<HTMLDivElement>(null);
+  const mouseX = useMotionValue(0.5);
+  const mouseY = useMotionValue(0.5);
+
+  const rotateX = useSpring(useTransform(mouseY, [0, 1], [6, -6]), { stiffness: 200, damping: 20 });
+  const rotateY = useSpring(useTransform(mouseX, [0, 1], [-6, 6]), { stiffness: 200, damping: 20 });
+  const spotlightX = useTransform(mouseX, [0, 1], [0, 100]);
+  const spotlightY = useTransform(mouseY, [0, 1], [0, 100]);
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    const rect = ref.current?.getBoundingClientRect();
+    if (!rect) return;
+    mouseX.set((e.clientX - rect.left) / rect.width);
+    mouseY.set((e.clientY - rect.top) / rect.height);
+  };
+
+  const handleMouseLeave = () => {
+    mouseX.set(0.5);
+    mouseY.set(0.5);
+  };
 
   return (
     <ScrollReveal delay={index * 0.12} direction={index % 2 === 0 ? "left" : "right"}>
       <motion.div
-        className="group relative p-6 sm:p-8 rounded-2xl border border-border/40 backdrop-blur-sm bg-card/20 overflow-hidden"
+        ref={ref}
+        className="group relative p-6 sm:p-8 rounded-2xl border border-border/40 backdrop-blur-sm bg-card/20 overflow-hidden cursor-pointer"
+        style={{
+          rotateX,
+          rotateY,
+          transformPerspective: 800,
+          transformStyle: "preserve-3d",
+        }}
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
         whileHover={{ y: -8, scale: 1.02 }}
         transition={{ type: "spring", stiffness: 300, damping: 20 }}
       >
-        {/* Hover glow */}
-        <div className={`absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-[radial-gradient(circle_at_center,hsl(var(--${color})/0.08),transparent_70%)]`} />
+        {/* Spotlight glow following cursor */}
+        <motion.div
+          className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+          style={{
+            background: useTransform(
+              [spotlightX, spotlightY],
+              ([x, y]) =>
+                `radial-gradient(circle at ${x}% ${y}%, hsl(var(--${color}) / 0.12), transparent 60%)`
+            ),
+          }}
+        />
 
         <motion.div
           className={`w-12 h-12 rounded-xl border border-${color}/20 flex items-center justify-center mb-4 relative`}
           whileHover={{ rotate: 10, scale: 1.1 }}
+          style={{ transform: "translateZ(20px)" }}
         >
           <Icon size={22} className={`text-${color}`} />
           <div className={`absolute inset-0 rounded-xl bg-${color}/5`} />
         </motion.div>
 
-        <h3 className="font-display text-base sm:text-lg font-bold text-foreground mb-2">
+        <h3 className="font-display text-base sm:text-lg font-bold text-foreground mb-2" style={{ transform: "translateZ(15px)" }}>
           {title}
         </h3>
-        <p className="font-mono-code text-[11px] sm:text-xs text-muted-foreground leading-relaxed">
+        <p className="font-mono-code text-[11px] sm:text-xs text-muted-foreground leading-relaxed" style={{ transform: "translateZ(10px)" }}>
           {description}
         </p>
 
-        {/* Animated corner accent */}
         <motion.div
           className={`absolute bottom-0 right-0 w-16 h-16 border-r-2 border-b-2 border-${color}/0 group-hover:border-${color}/20 rounded-br-2xl transition-colors duration-500`}
         />
@@ -137,6 +176,13 @@ const Index = () => {
   const heroOpacity = useTransform(scrollYProgress, [0, 0.3], [1, 0]);
   const heroScale = useTransform(scrollYProgress, [0, 0.3], [1, 0.95]);
 
+  // Blob parallax transforms
+  const blobY1 = useTransform(scrollYProgress, [0, 1], [0, -150]);
+  const blobY2 = useTransform(scrollYProgress, [0, 1], [0, 200]);
+  const blobY3 = useTransform(scrollYProgress, [0, 1], [0, -80]);
+  const blobRotate1 = useTransform(scrollYProgress, [0, 1], [0, 45]);
+  const blobRotate2 = useTransform(scrollYProgress, [0, 1], [0, -30]);
+
   const [introComplete, setIntroComplete] = useState(() => {
     return localStorage.getItem("vnk-intro-seen") === "true";
   });
@@ -171,10 +217,16 @@ const Index = () => {
             <CursorGlow />
             <ScrollProgress />
 
-            {/* Morphing blobs */}
-            <MorphingBlob className="-top-32 -left-32 sm:-top-48 sm:-left-48" color="hsl(var(--primary) / 0.06)" size={500} duration={14} delay={0.5} />
-            <MorphingBlob className="-bottom-40 -right-40 sm:-bottom-56 sm:-right-56" color="hsl(var(--accent) / 0.05)" size={450} duration={16} delay={1} />
-            <MorphingBlob className="top-1/3 right-0 translate-x-1/2" color="hsl(var(--highlight) / 0.04)" size={350} duration={18} delay={1.5} />
+            {/* Morphing blobs with scroll parallax */}
+            <motion.div style={{ y: blobY1, rotate: blobRotate1 }}>
+              <MorphingBlob className="-top-32 -left-32 sm:-top-48 sm:-left-48" color="hsl(var(--primary) / 0.06)" size={500} duration={14} delay={0.5} />
+            </motion.div>
+            <motion.div style={{ y: blobY2, rotate: blobRotate2 }}>
+              <MorphingBlob className="-bottom-40 -right-40 sm:-bottom-56 sm:-right-56" color="hsl(var(--accent) / 0.05)" size={450} duration={16} delay={1} />
+            </motion.div>
+            <motion.div style={{ y: blobY3 }}>
+              <MorphingBlob className="top-1/3 right-0 translate-x-1/2" color="hsl(var(--highlight) / 0.04)" size={350} duration={18} delay={1.5} />
+            </motion.div>
 
             {/* ═══════════════════ HERO SECTION ═══════════════════ */}
             <motion.section
@@ -251,7 +303,7 @@ const Index = () => {
                     </span>
                   </motion.div>
 
-                  {/* Main Title with staggered word reveals */}
+                  {/* Main Title */}
                   <motion.h1
                     className="text-[2.5rem] leading-[0.95] sm:text-6xl md:text-7xl lg:text-8xl xl:text-[6.5rem] font-extrabold sm:leading-[0.9] mb-5 sm:mb-8 font-display px-2"
                     initial={{ opacity: 0 }}
@@ -261,9 +313,7 @@ const Index = () => {
                     {["Something", "Extraordinary", "is Brewing"].map((word, i) => (
                       <motion.span
                         key={word}
-                        className={`${
-                          i === 1 ? "gradient-text" : "text-foreground"
-                        } inline-block ${i < 2 ? "mr-[0.3em]" : ""}`}
+                        className={`${i === 1 ? "gradient-text" : "text-foreground"} inline-block ${i < 2 ? "mr-[0.3em]" : ""}`}
                         initial={{ opacity: 0, y: 50, rotateX: -45, filter: "blur(10px)" }}
                         animate={{ opacity: 1, y: 0, rotateX: 0, filter: "blur(0px)" }}
                         transition={{
@@ -275,7 +325,6 @@ const Index = () => {
                         {word}
                       </motion.span>
                     ))}
-                    {/* Wrap after each major word */}
                     <motion.span
                       className="text-primary inline-block ml-0.5 sm:ml-1"
                       animate={{ opacity: [1, 0] }}
@@ -378,7 +427,6 @@ const Index = () => {
             {/* ═══════════════════ ABOUT / VISION SECTION ═══════════════════ */}
             <section className="relative z-10 py-20 sm:py-32 px-4 sm:px-8 md:px-12">
               <div className="max-w-4xl mx-auto">
-                {/* Section label */}
                 <ScrollReveal>
                   <div className="flex items-center gap-3 mb-8 sm:mb-12">
                     <div className="line-accent" />
@@ -388,7 +436,6 @@ const Index = () => {
                   </div>
                 </ScrollReveal>
 
-                {/* Big statement text with word reveal */}
                 <TextReveal
                   text="Building digital experiences at the intersection of design, motion, and technology."
                   className="font-display text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-foreground leading-[1.1] mb-8 sm:mb-12"
@@ -474,27 +521,58 @@ const Index = () => {
               <InteractiveLetters />
             </motion.section>
 
+            {/* ═══════════════════ CONTACT SECTION ═══════════════════ */}
+            <ContactSection />
+
             {/* ═══════════════════ FOOTER ═══════════════════ */}
             <footer className="relative z-10 border-t border-border/30 py-8 sm:py-12 px-4 sm:px-8 md:px-12">
-              <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-                <ScrollReveal direction="left">
-                  <span className="font-mono-code text-[9px] sm:text-[10px] tracking-widest uppercase text-muted-foreground/30">
-                    © {currentYear} Vaddi Naveen Kumar
-                  </span>
-                </ScrollReveal>
+              <div className="max-w-5xl mx-auto">
+                {/* Footer top row */}
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-6 mb-6">
+                  <ScrollReveal direction="left">
+                    <div className="flex items-center gap-3">
+                      <div className="line-accent" />
+                      <span className="font-display text-sm font-bold text-foreground">
+                        Vaddi Naveen Kumar
+                      </span>
+                    </div>
+                  </ScrollReveal>
 
-                <ScrollReveal direction="right">
-                  <div className="flex items-center gap-3">
-                    <span className="font-mono-code text-[9px] tracking-wider uppercase text-muted-foreground/20">
-                      Built with passion
+                  <ScrollReveal direction="right">
+                    <SocialLinks />
+                  </ScrollReveal>
+                </div>
+
+                {/* Divider */}
+                <motion.div
+                  className="h-px w-full bg-gradient-to-r from-transparent via-border/50 to-transparent mb-6"
+                  initial={{ scaleX: 0 }}
+                  whileInView={{ scaleX: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.8 }}
+                />
+
+                {/* Footer bottom */}
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
+                  <ScrollReveal direction="left">
+                    <span className="font-mono-code text-[9px] sm:text-[10px] tracking-widest uppercase text-muted-foreground/30">
+                      © {currentYear} Vaddi Naveen Kumar
                     </span>
-                    <motion.div
-                      className="w-1 h-1 rounded-full bg-primary"
-                      animate={{ scale: [1, 2, 1], opacity: [0.5, 1, 0.5] }}
-                      transition={{ duration: 2, repeat: Infinity }}
-                    />
-                  </div>
-                </ScrollReveal>
+                  </ScrollReveal>
+
+                  <ScrollReveal direction="right">
+                    <div className="flex items-center gap-3">
+                      <span className="font-mono-code text-[9px] tracking-wider uppercase text-muted-foreground/20">
+                        Built with passion
+                      </span>
+                      <motion.div
+                        className="w-1 h-1 rounded-full bg-primary"
+                        animate={{ scale: [1, 2, 1], opacity: [0.5, 1, 0.5] }}
+                        transition={{ duration: 2, repeat: Infinity }}
+                      />
+                    </div>
+                  </ScrollReveal>
+                </div>
               </div>
             </footer>
 
